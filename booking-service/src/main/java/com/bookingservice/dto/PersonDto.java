@@ -19,7 +19,6 @@ public class PersonDto {
     @NotBlank
     private String gender;
 
-    // optional — some usages need seatNumber / mealPreference
     private String seatNumber;
     private String mealPreference;
 }

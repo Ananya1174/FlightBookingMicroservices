@@ -30,7 +30,7 @@ public class Booking {
     private Double totalPrice;
 
     @Column(nullable = false)
-    private String status; // ACTIVE or CANCELLED
+    private String status; 
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();

@@ -33,7 +33,6 @@ public class BookingController {
             @Valid @RequestBody BookingRequest request,
             @RequestHeader(USER_HEADER) String userEmail) {
 
-        // if body doesn't contain userEmail, set it from header
         if (request.getUserEmail() == null || request.getUserEmail().isBlank()) {
             request.setUserEmail(userEmail);
         }
@@ -49,7 +48,7 @@ public class BookingController {
                 .buildAndExpand(resp.getPnr())
                 .toUri();
 
-        return ResponseEntity.created(location).body(resp); // 201 Created
+        return ResponseEntity.created(location).body(resp); 
     }
 
     /**
@@ -58,7 +57,7 @@ public class BookingController {
     @GetMapping("/ticket/{pnr}")
     public ResponseEntity<BookingResponseDto> getByPnr(@PathVariable("pnr") String pnr) {
         BookingResponseDto dto = bookingService.getByPnr(pnr);
-        return ResponseEntity.ok(dto); // 200 OK
+        return ResponseEntity.ok(dto); 
     }
 
     /**
@@ -67,7 +66,7 @@ public class BookingController {
     @GetMapping("/booking/history/{emailId}")
     public ResponseEntity<List<BookingResponseDto>> history(@PathVariable("emailId") String emailId) {
         List<BookingResponseDto> list = bookingService.getHistoryByEmail(emailId);
-        return ResponseEntity.ok(list); // 200 OK
+        return ResponseEntity.ok(list); 
     }
 
     /**
@@ -86,6 +85,6 @@ public class BookingController {
         resp.put("pnr", dto != null ? dto.getPnr() : pnr);
         resp.put("status", "CANCELLED");
 
-        return ResponseEntity.ok(resp); // 200 OK with message
+        return ResponseEntity.ok(resp); 
     }
 }

@@ -12,7 +12,7 @@ import lombok.*;
 @Builder
 public class BookingRequest {
 
-    private String userEmail; // controller will fallback to header if missing
+    private String userEmail; 
 
     @NotNull
     private Long flightId;

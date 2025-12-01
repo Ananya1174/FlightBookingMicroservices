@@ -56,19 +56,15 @@ public class BookingService {
                 headerEmail,
                 request == null ? null : request.getNumSeats());
 
-        // validate and normalize incoming request (may set userEmail from header)
+        
         validateAndNormalizeRequest(request, headerEmail);
 
-        // fetch flight (may throw and trigger circuit-breaker)
         FlightDto flight = fetchFlightOrThrow(request.getFlightId());
 
-        // ensure seats available (no need to store result — method throws if not enough)
         ensureSeatAvailabilityOrThrow(flight, request.getNumSeats());
 
-        // price calculation
         double totalPrice = calculateTotalPrice(flight.getPrice(), request.getNumSeats());
 
-        // build entity and persist
         Booking booking = buildBookingEntity(request, totalPrice);
         Booking saved = persistBookingOrThrow(booking);
 
@@ -78,7 +74,6 @@ public class BookingService {
         return convertToDto(saved);
     }
 
-    /* ---------- helpers (extracted to reduce cognitive complexity) ---------- */
 
     private void validateAndNormalizeRequest(BookingRequest request, String headerEmail) {
         if (request == null) {
@@ -88,7 +83,6 @@ public class BookingService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "X-User-Email header is required");
         }
 
-        // normalize userEmail: allow header to be canonical if body missing
         if (request.getUserEmail() == null || request.getUserEmail().isBlank()) {
             request.setUserEmail(headerEmail);
         } else if (!headerEmail.equalsIgnoreCase(request.getUserEmail())) {
@@ -128,7 +122,7 @@ public class BookingService {
 
         } catch (ResponseStatusException rse) {
             log.warn("Flight service returned an error for flightId={}: {}", flightId, rse.getReason());
-            throw rse; // keeps original status
+            throw rse; 
         } catch (Exception ex) {
             log.error("Unexpected error calling flight service for flightId={}", flightId, ex);
             throw new ResponseStatusException(
@@ -204,7 +198,6 @@ public class BookingService {
                 "Flight service unavailable. Try again later.");
     }
 
-    /* ---------- existing methods unchanged ---------- */
 
     @Transactional(readOnly = true)
     public BookingResponseDto getByPnr(String pnr) {
@@ -268,7 +261,7 @@ public class BookingService {
     private String generatePnr() {
         return UUID.randomUUID()
                 .toString()
-                .replace("-", "")   // ✔ faster, no regex
+                .replace("-", "")   
                 .substring(0, 8)
                 .toUpperCase();
     }
