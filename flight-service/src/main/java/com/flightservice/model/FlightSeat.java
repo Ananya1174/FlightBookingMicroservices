@@ -20,7 +20,10 @@ public class FlightSeat {
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
-    public FlightSeat() {}
+    public FlightSeat() {
+        // Default constructor required by JPA for entity initialization.
+
+    }
 
 	public Long getId() {
 		return id;

@@ -4,7 +4,6 @@ import com.flightservice.dto.*;
 import com.flightservice.model.Flight;
 import com.flightservice.model.FlightSeat;
 import com.flightservice.repository.FlightRepository;
-import com.flightservice.repository.FlightSeatRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,17 +11,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class FlightService {
 
     private final FlightRepository flightRepository;
-    private final FlightSeatRepository seatRepository;
+    private static final String STATUS_AVAILABLE = "AVAILABLE";
 
-    public FlightService(FlightRepository flightRepository, FlightSeatRepository seatRepository) {
+    public FlightService(FlightRepository flightRepository) {
         this.flightRepository = flightRepository;
-        this.seatRepository = seatRepository;
+
     }
 
     @Transactional
@@ -45,7 +43,7 @@ public class FlightService {
             for (String seatNo : request.getSeatNumbers()) {
                 FlightSeat seat = new FlightSeat();
                 seat.setSeatNumber(seatNo);
-                seat.setStatus("AVAILABLE");
+                seat.setStatus(STATUS_AVAILABLE);
                 seat.setFlight(flight);
                 seats.add(seat);
             }
@@ -54,7 +52,7 @@ public class FlightService {
             for (int i = 1; i <= Optional.ofNullable(request.getTotalSeats()).orElse(0); i++) {
                 FlightSeat seat = new FlightSeat();
                 seat.setSeatNumber(String.valueOf(i));
-                seat.setStatus("AVAILABLE");
+                seat.setStatus(STATUS_AVAILABLE);
                 seat.setFlight(flight);
                 seats.add(seat);
             }
@@ -91,7 +89,7 @@ public class FlightService {
         if (req.getTripType() != null && !req.getTripType().isBlank()) {
             flights = flights.stream()
                     .filter(f -> req.getTripType().equalsIgnoreCase(f.getTripType()))
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         return flights.stream().map(f -> {
@@ -103,10 +101,10 @@ public class FlightService {
             r.setAirlineLogoUrl(f.getAirlineLogoUrl());
             r.setPrice(f.getPrice());
             r.setTripType(f.getTripType());
-            int available = (int) f.getSeats().stream().filter(s -> "AVAILABLE".equalsIgnoreCase(s.getStatus())).count();
+            int available = (int) f.getSeats().stream().filter(s -> STATUS_AVAILABLE.equalsIgnoreCase(s.getStatus())).count();
             r.setSeatsAvailable(available);
             return r;
-        }).collect(Collectors.toList());
+        }).toList();
     }
     @Transactional(readOnly = true)
     public FlightDetailDto getFlightDetailById(Long id) {
@@ -128,7 +126,7 @@ public class FlightService {
                     List<FlightDetailDto.SeatDto> seats = f.getSeats() == null ? List.of()
                         : f.getSeats().stream()
                           .map(s -> new FlightDetailDto.SeatDto(s.getSeatNumber(), s.getStatus()))
-                          .collect(Collectors.toList());
+                          .toList();
                     dto.setSeats(seats);
                     return dto;
                 })
