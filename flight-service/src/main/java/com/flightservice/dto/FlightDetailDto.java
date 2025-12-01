@@ -25,6 +25,6 @@ public class FlightDetailDto {
     @AllArgsConstructor
     public static class SeatDto {
         private String seatNumber;
-        private String status; // AVAILABLE / BOOKED
+        private String status; 
     }
 }

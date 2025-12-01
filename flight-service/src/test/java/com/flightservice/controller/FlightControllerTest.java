@@ -23,8 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class FlightControllerTest {
 
     private MockMvc mockMvc;
-
-    // Register JavaTimeModule automatically
     private ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
 
     @Mock
@@ -38,10 +36,6 @@ class FlightControllerTest {
         controller = new FlightController(flightService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
-
-    // --------------------------------------
-    // addInventory test
-    // --------------------------------------
     @Test
     void addInventory_returns201_andBody() throws Exception {
         FlightInventoryRequest req = new FlightInventoryRequest();
@@ -55,7 +49,6 @@ class FlightControllerTest {
         req.setArrivalTime(LocalDateTime.of(2025, 12, 10, 12, 0));
         req.setSeatNumbers(List.of("1A", "1B"));
 
-        // Build response using FlightInfoDto
         FlightInfoDto info = new FlightInfoDto();
         info.setAirlineName("Indigo");
 
@@ -70,12 +63,9 @@ class FlightControllerTest {
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(5))
-                .andExpect(jsonPath("$.airlineName").value("Indigo")); // flattened due to @JsonUnwrapped
+                .andExpect(jsonPath("$.airlineName").value("Indigo")); 
     }
 
-    // --------------------------------------
-    // searchFlights test
-    // --------------------------------------
     @Test
     void searchFlights_returns201_andList() throws Exception {
         SearchRequest req = new SearchRequest();
@@ -95,9 +85,6 @@ class FlightControllerTest {
                 .andExpect(jsonPath("$[0].flightId").value(10));
     }
 
-    // --------------------------------------
-    // getFlightById test - present
-    // --------------------------------------
     @Test
     void getFlightById_returns200_whenPresent() throws Exception {
 
@@ -107,7 +94,7 @@ class FlightControllerTest {
         FlightDetailDto dto = new FlightDetailDto();
         dto.setId(99L);
         dto.setInfo(info);
-        dto.setSeats(List.of()); // or null, doesn't matter for this test
+        dto.setSeats(List.of()); 
 
         when(flightService.getFlightDetailById(99L)).thenReturn(dto);
 
@@ -117,9 +104,6 @@ class FlightControllerTest {
                 .andExpect(jsonPath("$.airlineName").value("Air India"));
     }
 
-    // --------------------------------------
-    // getFlightById test - missing
-    // --------------------------------------
     @Test
     void getFlightById_returns404_whenMissing() throws Exception {
         when(flightService.getFlightDetailById(123L)).thenReturn(null);

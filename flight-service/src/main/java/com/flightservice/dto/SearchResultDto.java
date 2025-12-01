@@ -60,5 +60,4 @@ public class SearchResultDto {
 		this.seatsAvailable = seatsAvailable;
 	}
 
-    // getters/setters and constructors
 }

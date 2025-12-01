@@ -39,11 +39,10 @@ public class FlightInventoryRequest {
     private Double price;
 
     @NotBlank
-    private String tripType; // ONEWAY or ROUNDTRIP
+    private String tripType; 
 
     @Positive
     private Integer totalSeats;
 
-    // Optional: list of seat numbers (ex: ["1A","1B"])
     private List<String> seatNumbers;
 }

@@ -37,7 +37,6 @@ public class FlightService {
         flight.setTripType(request.getTripType());
         flight.setTotalSeats(request.getTotalSeats());
 
-        // create seats
         List<FlightSeat> seats = new ArrayList<>();
         if (request.getSeatNumbers() != null && !request.getSeatNumbers().isEmpty()) {
             for (String seatNo : request.getSeatNumbers()) {
@@ -60,7 +59,6 @@ public class FlightService {
 
         Flight saved = flightRepository.save(flight);
 
-        // use mapper to build response
         return FlightMapper.toResponseDto(saved);
     }
 
@@ -101,5 +99,4 @@ public class FlightService {
                 .orElse(null);
     }
 
-    // helper methods...
 }

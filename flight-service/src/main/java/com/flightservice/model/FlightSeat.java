@@ -12,9 +12,9 @@ public class FlightSeat {
 
     private String seatNumber;
 
-    private String status; // AVAILABLE, BOOKED
+    private String status; 
 
-    private String passengerName; // optional
+    private String passengerName; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flight_id")
@@ -65,5 +65,4 @@ public class FlightSeat {
 		this.flight = flight;
 	}
 
-    // getters/setters
 }

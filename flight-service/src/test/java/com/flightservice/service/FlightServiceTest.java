@@ -28,7 +28,7 @@ class FlightServiceTest {
     FlightRepository flightRepository;
 
     @Mock
-    FlightSeatRepository seatRepository; // not used by current FlightService but mocked
+    FlightSeatRepository seatRepository; 
 
     @InjectMocks
     FlightService flightService;
@@ -57,7 +57,6 @@ class FlightServiceTest {
         saved.setArrivalTime(req.getArrivalTime());
         saved.setTotalSeats(req.getTotalSeats());
 
-        // when repository.save(...) is called, return the saved object (simulate DB)
         when(flightRepository.save(any(Flight.class))).thenAnswer(invocation -> {
             Flight f = invocation.getArgument(0);
             f.setId(42L);
@@ -68,12 +67,10 @@ class FlightServiceTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.getId()).isEqualTo(42L);
-        // access nested FlightInfoDto
         assertThat(dto.getInfo()).isNotNull();
         assertThat(dto.getInfo().getAirlineName()).isEqualTo("Indigo");
         assertThat(dto.getInfo().getTotalSeats()).isEqualTo(2);
 
-        // verify repository.save called once and saved.flight had seat list of size 2
         ArgumentCaptor<Flight> cap = ArgumentCaptor.forClass(Flight.class);
         verify(flightRepository, times(1)).save(cap.capture());
         Flight persisted = cap.getValue();
@@ -102,7 +99,6 @@ class FlightServiceTest {
         FlightResponseDto dto = flightService.addInventory(req);
         assertThat(dto).isNotNull();
         assertThat(dto.getId()).isEqualTo(7L);
-        // repository saved should include seats equal to totalSeats
         ArgumentCaptor<Flight> cap = ArgumentCaptor.forClass(Flight.class);
         verify(flightRepository).save(cap.capture());
         assertThat(cap.getValue().getSeats()).hasSize(3);
@@ -110,7 +106,6 @@ class FlightServiceTest {
 
     @Test
     void searchFlights_filtersByTripType_andCountsAvailableSeats() {
-        // Prepare a flight with 2 seats: one AVAILABLE one BOOKED
         Flight f = new Flight();
         f.setId(11L);
         f.setOrigin("HYD");
@@ -168,7 +163,6 @@ class FlightServiceTest {
         assertThat(dto.getSeats()).hasSize(1);
         assertThat(dto.getSeats().get(0).getSeatNumber()).isEqualTo("1");
 
-        // also verify nested info values if needed
         assertThat(dto.getInfo()).isNotNull();
         assertThat(dto.getInfo().getFlightNumber()).isEqualTo("AI101");
         assertThat(dto.getInfo().getAirlineName()).isEqualTo("Air India");

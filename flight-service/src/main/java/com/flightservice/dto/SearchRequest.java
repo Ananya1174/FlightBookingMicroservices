@@ -13,8 +13,6 @@ public class SearchRequest {
 
     @NotNull
     private LocalDate travelDate;
-
-    // optional: tripType filter
     private String tripType;
 
 	public String getOrigin() {
@@ -49,5 +47,5 @@ public class SearchRequest {
 		this.tripType = tripType;
 	}
 
-    // getters/setters
+    
 }

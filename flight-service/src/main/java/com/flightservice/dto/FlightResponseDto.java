@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 public class FlightResponseDto {
     private Long id;
 
-    // JsonUnwrapped flattens the FlightInfoDto fields into the parent JSON
     @JsonUnwrapped
     private FlightInfoDto info;
 }
